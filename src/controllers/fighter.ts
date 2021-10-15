@@ -9,7 +9,7 @@ export async function insertFighter(req:any, res:any) {
     const response = await db.query(insertFighterQuery, [name, 0, 0]);
 
     if (response) {
-        console.log("Fighter added successfully", response.rows);
+        console.log("Fighter added successfully");
         res.status(201).send({
             message: "Fighter added successfully",
             body: {
@@ -23,13 +23,20 @@ export async function insertFighter(req:any, res:any) {
 }
 
 export async function getOneFighter(req:any, res:any) {
-    const { name } = req.body;
+    const { name } = req.params;
     const response = await db.query(selectFighterQuery, [name]);
-    if (response) {
+    if (response && response.rowCount > 0) {
         console.log("Query successful", response.rows);
         res.status(200).send(response.rows);
     }
+    else if (response) {
+        console.log("fighter not found");
+        res.status(204).send({
+            message: "fighter not found"
+        });
+    }
     else {
+        console.log("Query error");
         res.status(400).send({
             message: "Query error"
         });
@@ -41,7 +48,7 @@ export async function updateFighter(req:any, res:any) {
 
     const response = await db.query(updateFighterQuery, [wins, losses, name]);
     if (response) {
-        console.log("Fighter updated successfuly", response.rows);
+        console.log("Fighter updated successfuly");
         res.status(200).send({ message: "Updated successfully"});
     }
     else {
