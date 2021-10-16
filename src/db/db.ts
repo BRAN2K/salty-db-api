@@ -1,7 +1,9 @@
 import {Pool} from "pg";
-import {postgres} from "../config.json";
 
-const pool = new Pool(postgres);
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
 
 async function query(query:string, values:(string|number)[]) {
     try {
