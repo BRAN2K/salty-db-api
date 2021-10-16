@@ -1,5 +1,6 @@
 import express from "express-promise-router";
 import fighterController = require("../controllers/fighter");
+
 const router = express();
 
 router.post('/fighter', fighterController.insertFighter);
