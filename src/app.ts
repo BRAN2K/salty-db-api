@@ -5,6 +5,7 @@ import helmet from "helmet";
 import indexRouter = require('./routes/index');
 import fighterRouter = require('./routes/fighter');
 import fightsRouter = require('./routes/fights');
+import loginRouter = require('./routes/login');
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use(helmet());
 app.use(indexRouter.router);
 app.use('/api/', fighterRouter.router);
 app.use('/api/', fightsRouter.router);
+app.use('/api/', loginRouter.router);
 
 export {app};
