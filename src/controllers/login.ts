@@ -14,20 +14,28 @@ export async function generateJWT(req:any, res:any) {
         if (match) {
             const id = response.rows[0]["id"];
             jwt.sign({id}, (<Secret>process.env.JWT_SECRET), {expiresIn: "30d"}, function(err:any, token:any) {
-                if (err) return res.status(500).send({ message: 'Failed to generate token'});
-                return res.status(200).send({auth: true, token: token});
+                if (err) {
+                    return res.status(500).send({ message: 'Failed to generate token'});
+                }
+                else {
+                    return res.status(200).send({auth: true, token: token});
+                }
             });
         }
-        res.status(500).send({message: 'invalid login'});
+        else {
+            res.status(500).send({message: 'invalid login'});
+        }
     }
-    res.status(500).send({message: 'database error'});
+    else {
+        res.status(500).send({message: 'database error'});
+    }
 }
 
 export async function verifyJWT(req:any, res:any, next:any) {
     const token = req.headers['x-access-token'];
     if (!token) return res.status(401).send({ auth: false, message: 'No token provided'});
 
-    jwt.verify(token, (<Secret>process.env.SECRET), function(err:any, decoded:any) {
+    jwt.verify(token, (<Secret>process.env.JWT_SECRET), function(err:any, decoded:any) {
         if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token'});
 
         req.userId = decoded.id;
